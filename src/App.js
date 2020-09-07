@@ -56,14 +56,16 @@ function App() {
   } //this function "showResult" sets states for the chosen city by the user through the search input by the submit button
 
   async function defaultResult(){
-    // if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(
-    //        coords.longitude, coords.latitude
-    //        insert geolocation api method with new values from navigator
-    //        update states accordingly
-    //     );
-    // }
-    // else{
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async(position)=>{
+        //  insert geolocation api method with new values from navigator
+        const CityGeolocationApi = await 
+          fetch (`http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${ApiKey}&q=${position.coords.latitude}%2C${position.coords.longitude}`)
+        const CityGeolocationAddress = await CityGeolocationApi.json();
+        showResult(CityGeolocationAddress, CityGeolocationAddress.Key)
+      });
+    }
+    else{
     const CityDataApi = await 
       fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/currentconditions/v1/${specCityAddress}?apikey=${ApiKey}`)
     const CityData = await CityDataApi.json();
@@ -71,7 +73,7 @@ function App() {
     // translating the information to readable JS
 
     const CityHourlyForecastApi = await
-    fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${specCityAddress}?apikey=${ApiKey}&details=true&metric=true`)
+      fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${specCityAddress}?apikey=${ApiKey}&details=true&metric=true`)
     const CityHourlyForecast = await CityHourlyForecastApi.json();
     // get information from API with fetch
     // translating the information to readable JS
@@ -85,7 +87,7 @@ function App() {
     setCityData(CityData) // update current weather
     setCityHourlyForecastData(CityHourlyForecast) // update Hourly forcast
     setCityForecastData(CityForecast) // update forcast
-    //}
+    }
   } //this function "defaultResult" sets states for Tel-Aviv (the default choice)
 
   function UpdateFavoriteCities(CityAddressKey){

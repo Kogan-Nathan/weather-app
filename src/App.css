@@ -1,5 +1,10 @@
+:root{
+  --back_x: #b8b7b8;
+  --back_y: #eef2f3;
+}
+
 .App{
-  background-image: linear-gradient(-90deg,#b8b7b8, #eef2f3);
+  background-image: linear-gradient(-90deg,var(--back_x), var(--back_y));
   min-height: 100vh;
 }
 .nav-bar{

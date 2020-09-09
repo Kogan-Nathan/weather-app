@@ -49,6 +49,26 @@ function App() {
     const CityForecast = await CityForecastApi.json();
     // get information from API with fetch
     // translating the information to readable JS
+    if(CityData[0].Temperature.Metric.Value<=0){
+      document.documentElement.style.setProperty("--back_x", "#acb6e5");
+      document.documentElement.style.setProperty("--back_y", "#86fde8");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=0.1&&CityData[0].Temperature.Metric.Value<=19.9){
+      document.documentElement.style.setProperty("--back_x", "#83a4d4");
+      document.documentElement.style.setProperty("--back_y", "#b6fbff");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=20&&CityData[0].Temperature.Metric.Value<=27.9){
+      document.documentElement.style.setProperty("--back_x", "#ed4264");
+      document.documentElement.style.setProperty("--back_y", "#ffedbc");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=28&&CityData[0].Temperature.Metric.Value<=34.9){
+      document.documentElement.style.setProperty("--back_x", "#ff9966");
+      document.documentElement.style.setProperty("--back_y", "#ff5e62");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=35){
+      document.documentElement.style.setProperty("--back_x", "#f12711");
+      document.documentElement.style.setProperty("--back_y", "#f5af19");
+    }
 
     setCityData(CityData) // update current weather
     setCityHourlyForecastData(CityHourlyForecast) // update Hourly forcast
@@ -83,6 +103,26 @@ function App() {
     const CityForecast = await CityForecastApi.json();
     // get information from API with fetch
     // translating the information to readable JS
+    if(CityData[0].Temperature.Metric.Value<=0){
+      document.documentElement.style.setProperty("--back_x", "#acb6e5");
+      document.documentElement.style.setProperty("--back_y", "#86fde8");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=0.1&&CityData[0].Temperature.Metric.Value<=19.9){
+      document.documentElement.style.setProperty("--back_x", "#83a4d4");
+      document.documentElement.style.setProperty("--back_y", "#b6fbff");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=20&&CityData[0].Temperature.Metric.Value<=27.9){
+      document.documentElement.style.setProperty("--back_x", "#ed4264");
+      document.documentElement.style.setProperty("--back_y", "#ffedbc");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=28&&CityData[0].Temperature.Metric.Value<=34.9){
+      document.documentElement.style.setProperty("--back_x", "#ff9966");
+      document.documentElement.style.setProperty("--back_y", "#ff5e62");
+    }
+    else if(CityData[0].Temperature.Metric.Value>=35){
+      document.documentElement.style.setProperty("--back_x", "#f12711");
+      document.documentElement.style.setProperty("--back_y", "#f5af19");
+    }
 
     setCityData(CityData) // update current weather
     setCityHourlyForecastData(CityHourlyForecast) // update Hourly forcast

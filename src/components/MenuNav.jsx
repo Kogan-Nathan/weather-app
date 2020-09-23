@@ -3,8 +3,8 @@ import {Link} from 'react-router-dom'
 
 export default function MenuNav(props) {
 
-    function handleCheckbox(){
-        props.TempUnit()
+    function toggleTempValue(){
+        props.UpdateTempValue()
     }
 
     return (
@@ -14,8 +14,8 @@ export default function MenuNav(props) {
                 <Link to="/"><li>Home</li></Link>
                 <Link to="/favorites"><li>Favorites</li></Link>
                 <li>
-                    <div className="button" id="button">
-                        <input type="checkbox" className="checkbox" onChange={handleCheckbox}/>
+                    <div className="button">
+                        <input type="checkbox" className="checkbox" onChange={toggleTempValue}/>
                         <div className="knobs"></div>
                         <div className="layer"></div>
                     </div>

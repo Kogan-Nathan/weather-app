@@ -45,7 +45,7 @@ a:visited{
   font-size: 1.5em;
 }
 .Home-Search{
-  width: 40%;
+  width: fit-content;
   margin: 5px auto;
 }
 .Autocomplete-Options{
@@ -97,7 +97,13 @@ a:visited{
   z-index: 1;
   width: 26em;
   position: absolute;
-  left: auto;
+  padding: 2px;
+  background-color: whitesmoke;
+  text-align: left;
+  margin-left: 8px;
+}
+.Home-Page{
+  padding: 7px 0px;
 }
 .Home-Result{
   width: 90%;
@@ -123,38 +129,54 @@ a:visited{
   margin-left: 10px;
 }
 .Daily{
-  width: 250px; 
+  width: 99%; 
   background-color: whitesmoke;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 7px;
+  margin: 2px 0px;
 }
-
-.Hourly p{
-  margin: 5px;
+.Forecast-Header .space-between{
+  display: block;
 }
-
-.Hourly-ForeCast{
-  /* background-color: #eef2f3; */
-  display: flex;
-  justify-content: space-evenly;
-  width: 95%;
-  margin: auto;
-  border-radius: 25px;
-}
-
-.Forecast-Content{
+.space-evenly{
   display: flex;
   justify-content: space-evenly;
 }
 
-.Forecast-Content span{
-  margin: auto 10px;
+.indent{
+  margin-left: 7px;
+}
+
+.weather-icon{
+  width: 50px;
+  height: 50;
+}
+
+.icon-button{
+  border: none;
+  border-radius: 50%;
+  padding: 0px;
+  margin-left: 5px;
+  background: rgba(233, 242, 250, 0.288);
+}
+
+.icon-button:focus{
+  outline: none;
+}
+
+.icon-button:hover{
+  background: rgba(213, 228, 245, 0.37);
+}
+
+.cursor{
+  cursor: pointer;
 }
 
 .Bottom-Days{
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
 }
 .Favorite-Button{
   padding: 10px;
@@ -177,8 +199,8 @@ a:visited{
   display: flex;
   justify-content: space-around;
 }
-.knobs, .layer
-{
+
+.weather-knobs, .weather-layer{
   position: absolute;
   top: 0;
   right: 0;
@@ -186,17 +208,17 @@ a:visited{
   left: 0;
 }
 
-.button
-{
+.button-toggle{
+  display: inline-block;
+  margin-left: 10px;
   position: relative;
-  width: 140px;
+  width: 120px;
   height: 36px;
   overflow: hidden;
   border-radius: 2px;
 }
 
-.checkbox
-{
+.weather-checkbox{
   position: relative;
   width: 100%;
   height: 100%;
@@ -207,29 +229,101 @@ a:visited{
   z-index: 3;
 }
 
-.knobs
-{
+.weather-knobs{
   z-index: 2;
 }
 
-.layer
-{
+.weather-layer{
+  width: 100%;
+  background-color: rgba(168, 168, 168, 0.267);
+  transition: 0.3s ease all;
+  z-index: 1;
+}
+
+.button-toggle .weather-knobs:before{
+  content: 'Day';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 50px;
+  height: 10px;
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-align: center;
+  line-height: 1;
+  padding: 9px 4px;
+  background-color: #8fdafdbb;
+  border-radius: 2px;
+  transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+}
+
+.button-toggle .weather-checkbox:active + .weather-knobs:before{
+  width: 60px;
+}
+
+.button-toggle .weather-checkbox:checked:active + .weather-knobs:before{
+  margin-left: -26px;
+}
+
+.button-toggle .weather-checkbox:checked + .weather-knobs:before{
+  content: 'Night';
+  left: 56px;
+  background-color: #044997a1;
+}
+
+.button-toggle .weather-checkbox:checked {
+  background-color: rgba(255, 255, 255, 0.281);
+}
+
+.knobs, .layer{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.button{
+  position: relative;
+  width: 145px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.checkbox{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.knobs{
+  z-index: 2;
+}
+
+.layer{
   width: 100%;
   background-color: rgba(255, 255, 255, 0.281);
   transition: 0.3s ease all;
   z-index: 1;
 }
-#button .knobs:before
-{
+
+.button .knobs:before{
   content: 'Celsius';
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 70px;
+  width: 73px;
   height: 10px;
   color: #fff;
   font-size: 10px;
-  font-weight: bold;
+  letter-spacing: 3px;
   text-align: center;
   line-height: 1;
   padding: 9px 4px;
@@ -238,25 +332,21 @@ a:visited{
   transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
 }
 
-#button .checkbox:active + .knobs:before
-{
+.button .checkbox:active + .knobs:before{
   width: 46px;
 }
 
-#button .checkbox:checked:active + .knobs:before
-{
+.button .checkbox:checked:active + .knobs:before{
   margin-left: -26px;
 }
 
-#button .checkbox:checked + .knobs:before
-{
+.button .checkbox:checked + .knobs:before{
   content: 'Fahrenheit';
-  left: 56px;
+  left: 60px;
   background-color: #c97fc181;
 }
 
-#button .checkbox:checked ~ .layer
-{
+.button .checkbox:checked {
   background-color: rgba(255, 255, 255, 0.281);
 }
 
@@ -264,10 +354,17 @@ a:visited{
   .Bigger{
     font-size: 1.1em;
   }
-  .Home-Search{
-    width: fit-content
+}
+
+@media only screen and (max-width:1200px){
+  .nav-links{
+    flex: 0.5;
+  }
+  .Bottom-Days{
+    width: 99%;
   }
 }
+
 @media only screen and (max-width:900px){
   .App{
     height: auto;
@@ -276,31 +373,49 @@ a:visited{
     width: 19em
   }
   .nav-links{
-    flex: 0.5;
+    flex: 0.6;
   }
   .Bottom-Days{
-    flex-direction: column;
     width: 98%;
   }
-  .Daily{
-    width:100%
-  }
-  .Forecast-Content{
-    display: flex;
-    justify-content: space-around;
-  }
 }
+
 @media only screen and (max-width:800px){
+  .nav-links{
+    flex: 0.7;
+  }
   .Home-Search input{
     width: 60%
   }
   .Bottom-Days{
-    width: 97%;
+    width: 98%;
+  }
+  .Empty-Title{
+    font-size: 1.2em;
+  }
+  .Autocomplete-Box{
+    width: 315px;
   }
 }
-@media only screen and (max-width:600px){
+
+@media only screen and (max-width:700px){
   .nav-links{
-    flex: 0.7;
+    flex: 0.8;
+  }
+}
+
+@media only screen and (max-width:650px){
+  .nav-links{
+    flex: 0.9;
+  }
+}
+
+@media only screen and (max-width:600px){
+  .nav-bar{
+    flex-direction: column;
+  }
+  .nav-links{
+    flex-direction: column;
   }
   .Top{
     flex-direction: column;
@@ -309,21 +424,82 @@ a:visited{
     font-size: 1.5em;
   }
   .Bottom-Days{
-    width: 96%;
+    width: 97%;
+  }
+  .Forecast-Header .space-between{
+    display: flex;
+    justify-content: space-between;
   }
 }
+
 @media only screen and (max-width:450px){
-  .nav-bar{
-    flex-direction: column;
-  }
   .nav-title{
     font-size: 2.2em;
     margin: 0px;
   }
-  .nav-links{
-    flex-direction: column;
-  }
   .Bottom-Days{
     width: 95%;
+  }
+  .Favorite-Page{
+    flex-direction: column;
+  }
+  .Favorite-Page a .Daily{
+    width: 95%;
+  }
+  .Favorite-Page a .Daily p{
+    text-align: center;
+  }
+  .Center h1{
+    font-size: 1.4em;
+  }
+  .Forecast-Content .Center .Bigger{
+    display: block;
+  }
+  .Forecast-Header p{
+    text-align: center;
+    font-size: 14px;
+  }
+  .indent{
+    margin-left: 0px;
+  }
+  .button-toggle{
+    width: 100px;
+  }
+  .button-toggle .weather-knobs:before{
+    width: 40px;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+  .button-toggle .weather-checkbox:active + .weather-knobs:before{
+    width: 40px;
+  }  
+  .button-toggle .weather-checkbox:checked + .weather-knobs:before{
+    left: 47px;
+  }
+}
+
+@media only screen and (max-width:350px){
+  .Home-Search{
+    width: 90%;
+    margin: auto;
+  }
+  .Home-Search input{
+    width: 50%
+  }
+  .Autocomplete-Box{
+    margin-top: -2px;
+    width: 260px;
+  }
+  .Favorite-Title h1{
+    margin: 2px 0px;
+  }
+  .Favorite-Button{
+    font-size: 1em;
+  }
+  .Center h1{
+    font-size: 1.3em;
+  }
+  .Forecast-Header .Bigger{
+    font-size: 1em;
   }
 }

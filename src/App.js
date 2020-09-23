@@ -4,131 +4,97 @@ import './App.css';
 import MenuNav from './components/MenuNav';
 import Home from './components/Home'
 import Favorites from './components/Favorites';
-const ApiKey="CGRS4K6iE0lcn3Xy8nsinEK0AxUqE6hd"
+const ApiKey = "c1Ovp4IqKAag4Md99AAiQJlwAdHhNxmC"
 
 function App() {
   const [firstRender, setFirstRender] = useState(true)
-  const [specCityAddress,setSpecCityAddress]=useState('215854')
-  const [cityData,setCityData]=useState()
-  const [cityHourlyForecastData,setCityHourlyForecastData]=useState()
-  const [cityForecastData,setCityForecastData]=useState()
+  const [fetchResult, setFetchResult] = useState("")
+  const [cityData,setCityData]=useState("")
+  const [cityForecastData,setCityForecastData]=useState("")
   const [isCelsuis,setIsCelsuis]=useState(true)
-  // const [geolocationLongitude,setGeolocationLongtitude]=useState()
-  // const [geolocationLatitude,setGeolocationLatitude]=useState()
   const [selectedCity,setSelectedCity]=useState({
     Key: "215854",Type: "City",LocalizedName: "Tel Aviv",
     Country: {ID: "IL", LocalizedName: "Israel"},AdministrativeArea: {ID: "TA", LocalizedName: "Tel Aviv"}
   })
   const [favorites,setFavorites]=useState([])
   
-  function checkFirstRender() {
+  function handleFirstRender() {
     if (firstRender === true) {
-      defaultResult()
+      getDefault()
       setFirstRender(false)                
     }
-  } //on first render activates function "defaultResult"
+  }
 
-  async function showResult(cityInfo,cityKey){
-    setSpecCityAddress(cityKey); //update city address
-    setSelectedCity(cityInfo); // update city location data
-    
+  function handleBackgroundColor(TemperatureValue){
+    if(TemperatureValue<=0){
+      document.documentElement.style.setProperty("--back_x", "#acb6e5");
+      document.documentElement.style.setProperty("--back_y", "#86fde8");
+    }
+    else if(TemperatureValue>=0.1&&TemperatureValue<=19.9){
+      document.documentElement.style.setProperty("--back_x", "#83a4d4");
+      document.documentElement.style.setProperty("--back_y", "#b6fbff");
+    }
+    else if(TemperatureValue>=20&&TemperatureValue<=27.9){
+      document.documentElement.style.setProperty("--back_x", "#ed4264");
+      document.documentElement.style.setProperty("--back_y", "#ffedbc");
+    }
+    else if(TemperatureValue>=28&&TemperatureValue<=34.9){
+      document.documentElement.style.setProperty("--back_x", "#ff9966");
+      document.documentElement.style.setProperty("--back_y", "#ff5e62");
+    }
+    else if(TemperatureValue>=35){
+      document.documentElement.style.setProperty("--back_x", "#f12711");
+      document.documentElement.style.setProperty("--back_y", "#f5af19");
+    }
+  }
+
+  async function getSpecific(cityInfo,cityKey){
+    setFetchResult("")
+    setSelectedCity(cityInfo)
+
     const CityDataApi = await
       fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/currentconditions/v1/${cityKey}?apikey=${ApiKey}`)
-    const CityData = await CityDataApi.json();
-    // get information from API with fetch
-    // translating the information to readable JS
+    const CityCurrentData = await CityDataApi.json();
     
-    const CityHourlyForecastApi = await
-    fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${cityKey}?apikey=${ApiKey}&details=true&metric=true`)
-    const CityHourlyForecast = await CityHourlyForecastApi.json();
-    // get information from API with fetch
-    // translating the information to readable JS
-
     const CityForecastApi = await
       fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/forecasts/v1/daily/5day/${cityKey}?apikey=${ApiKey}&language=en-us&details=true&metric=true`)
     const CityForecast = await CityForecastApi.json();
-    // get information from API with fetch
-    // translating the information to readable JS
-    if(CityData[0].Temperature.Metric.Value<=0){
-      document.documentElement.style.setProperty("--back_x", "#acb6e5");
-      document.documentElement.style.setProperty("--back_y", "#86fde8");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=0.1&&CityData[0].Temperature.Metric.Value<=19.9){
-      document.documentElement.style.setProperty("--back_x", "#83a4d4");
-      document.documentElement.style.setProperty("--back_y", "#b6fbff");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=20&&CityData[0].Temperature.Metric.Value<=27.9){
-      document.documentElement.style.setProperty("--back_x", "#ed4264");
-      document.documentElement.style.setProperty("--back_y", "#ffedbc");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=28&&CityData[0].Temperature.Metric.Value<=34.9){
-      document.documentElement.style.setProperty("--back_x", "#ff9966");
-      document.documentElement.style.setProperty("--back_y", "#ff5e62");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=35){
-      document.documentElement.style.setProperty("--back_x", "#f12711");
-      document.documentElement.style.setProperty("--back_y", "#f5af19");
-    }
 
-    setCityData(CityData) // update current weather
-    setCityHourlyForecastData(CityHourlyForecast) // update Hourly forcast
-    setCityForecastData(CityForecast) // update forcast
-  } //this function "showResult" sets states for the chosen city by the user through the search input by the submit button
-
-  async function defaultResult(){
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async(position)=>{
-        //  insert geolocation api method with new values from navigator
-        const CityGeolocationApi = await 
-          fetch (`http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${ApiKey}&q=${position.coords.latitude}%2C${position.coords.longitude}`)
-        const CityGeolocationAddress = await CityGeolocationApi.json();
-        showResult(CityGeolocationAddress, CityGeolocationAddress.Key)
-      });
+    if(CityDataApi.status===200&&CityForecastApi.status===200){
+      setCityData(CityCurrentData)
+      setCityForecastData(CityForecast)
+      handleBackgroundColor(CityCurrentData[0].Temperature.Metric.Value)
+      setFetchResult(CityForecastApi)
     }
     else{
-    const CityDataApi = await 
-      fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/currentconditions/v1/${specCityAddress}?apikey=${ApiKey}`)
-    const CityData = await CityDataApi.json();
-    // get information from API with fetch
-    // translating the information to readable JS
+      setFetchResult(CityForecastApi)
+      console.error(CityForecast.Message)
+    }
+  }
 
-    const CityHourlyForecastApi = await
-      fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${specCityAddress}?apikey=${ApiKey}&details=true&metric=true`)
-    const CityHourlyForecast = await CityHourlyForecastApi.json();
-    // get information from API with fetch
-    // translating the information to readable JS
-
-    const CityForecastApi = await 
-      fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/forecasts/v1/daily/5day/${specCityAddress}?apikey=${ApiKey}&language=en-us&details=true&metric=true`)
-    const CityForecast = await CityForecastApi.json();
-    // get information from API with fetch
-    // translating the information to readable JS
-    if(CityData[0].Temperature.Metric.Value<=0){
-      document.documentElement.style.setProperty("--back_x", "#acb6e5");
-      document.documentElement.style.setProperty("--back_y", "#86fde8");
+  async function getDefault(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async(position)=>{
+        const CityGeolocationApi = await 
+          fetch (`https://cors-anywhere.herokuapp.com/http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${ApiKey}&q=${position.coords.latitude}%2C${position.coords.longitude}`)
+        const CityGeolocationAddress = await CityGeolocationApi.json();         
+        if(CityGeolocationApi.status===200){
+          getSpecific(CityGeolocationAddress, CityGeolocationAddress.Key)
+        }
+        else{
+          setFetchResult(CityGeolocationApi)
+          console.error(CityGeolocationAddress.Message)
+        }
+      }, showDefault);
     }
-    else if(CityData[0].Temperature.Metric.Value>=0.1&&CityData[0].Temperature.Metric.Value<=19.9){
-      document.documentElement.style.setProperty("--back_x", "#83a4d4");
-      document.documentElement.style.setProperty("--back_y", "#b6fbff");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=20&&CityData[0].Temperature.Metric.Value<=27.9){
-      document.documentElement.style.setProperty("--back_x", "#ed4264");
-      document.documentElement.style.setProperty("--back_y", "#ffedbc");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=28&&CityData[0].Temperature.Metric.Value<=34.9){
-      document.documentElement.style.setProperty("--back_x", "#ff9966");
-      document.documentElement.style.setProperty("--back_y", "#ff5e62");
-    }
-    else if(CityData[0].Temperature.Metric.Value>=35){
-      document.documentElement.style.setProperty("--back_x", "#f12711");
-      document.documentElement.style.setProperty("--back_y", "#f5af19");
+    else{
+      getSpecific(selectedCity, selectedCity.Key)
     }
 
-    setCityData(CityData) // update current weather
-    setCityHourlyForecastData(CityHourlyForecast) // update Hourly forcast
-    setCityForecastData(CityForecast) // update forcast
+    function showDefault(){
+      getSpecific(selectedCity, selectedCity.Key)
     }
-  } //this function "defaultResult" sets states for Tel-Aviv (the default choice)
+  }
 
   function UpdateFavoriteCities(CityAddressKey){
     let index = favorites.findIndex(object => object.selectedCity.Key === CityAddressKey)
@@ -139,53 +105,32 @@ function App() {
     else{
       setFavorites([{selectedCity,cityData},...favorites])
     }
-  } //this function "UpdateFavoriteCities" gets a -cityAdress- and checks if it exists in the favorites state
-  //  if it does exists, it simply removes it, but if its does not exists, it adds the city
+  }
+  
   function openFavoriteCity(FavoriteCity){
-    showResult(FavoriteCity.selectedCity, FavoriteCity.selectedCity.Key)
-  } // sends the information to "showResult" so we will update all the databases(from the API) with a new information
+    getSpecific(FavoriteCity.selectedCity, FavoriteCity.selectedCity.Key)
+  }
 
-  function updateSelectedCity(cityInformation){
-    setSelectedCity(cityInformation)
-  } //simply updates state that holds information about city name and country with new one
-
-  function UpdateCurrent(CityCurrent){
-    setCityData(CityCurrent)
-  } //simply updates state that holds information about city current weather with new one
-
-  function UpdateCityforecast(CityForecastInfo){
-    setCityForecastData(CityForecastInfo)
-  } //simply updates state that holds information about city forecast with new one
-
-  function UpdateCityAddress(address){
-    setSpecCityAddress(address)
-  } //simply updates state that holds information about city address with new one
-
-  function toggleTempValue(){
+  function handleTempValue(){
     setIsCelsuis(!isCelsuis)
   }
 
   return (
-    <div className="App" onLoad={checkFirstRender()}>
+    <div className="App" onLoad={handleFirstRender()}>
     <Router>
-    <MenuNav TempUnit={toggleTempValue}/>
+    <MenuNav UpdateTempValue={handleTempValue}/>
     <Switch>
       <Route exact path="/" component={()=>{return <Home
       City={selectedCity}
-      UpdateSelectedCity={updateSelectedCity}
       CityCurrentData={cityData}
-      UpdateCurrentData={UpdateCurrent}
-      CityHourlyCast={cityHourlyForecastData}
       City5DayCast={cityForecastData}
-      UpdateCityCast={UpdateCityforecast}
-      CityAddress={specCityAddress}
-      UpdateAddress={UpdateCityAddress}
-      UpdateResult={showResult}
+      UpdateResult={getSpecific}
       favoriteCities={favorites}
       UpdateFavorites={UpdateFavoriteCities}
       TempUnit={isCelsuis}
+      fetch={fetchResult}
       />}}/>
-      <Route exact path="/favorites" component={()=>{return <Favorites SendCity={openFavoriteCity} favoriteCities={favorites} TempUnit={isCelsuis}/>}}/>
+      <Route exact path="/favorites" component={()=>{return <Favorites SendCity={openFavoriteCity} cities={favorites} TempUnit={isCelsuis}/>}}/>
     </Switch>
     </Router>
     </div>

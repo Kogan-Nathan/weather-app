@@ -6,20 +6,20 @@ export default function Favorites(props) {
     function DateString(date){
         const day = new Date(date)
         return <p>{day.toDateString()}</p>
-    } //changes the ISO date value from the API to readable Date with "toDateString" function
+    }
     
     function sendInfo(CityInfo){
         props.SendCity(CityInfo)
-    } //simply sends all the information about a city to the function "openFavoriteCity" at App page
+    }
 
     function toggleTemperature(value){
         if(props.TempUnit){
-            return value + "C"
+            return value
         }
         else{
-            return (value*1.8+32) + "F"
+            return (parseInt(value)*1.8+32)
         }
-    } //converts Celsius to Fahrenheit and vice versa
+    }
 
     function toggleTemperatureUnit(){
         if(props.TempUnit){
@@ -28,19 +28,21 @@ export default function Favorites(props) {
         else{
             return "F"
         }
-    } //converts Celsius to Fahrenheit and vice versa
+    }
 
     function checkFavorites(){
-        if(props.favoriteCities===undefined){
+        document.documentElement.style.setProperty("--back_x", "#b8b7b8");
+        document.documentElement.style.setProperty("--back_y", "#eef2f3");
+        if(props.cities.length===0){
             return <h2 className="Empty-Title">No Favorites Yet</h2>
         }
         else{
-            if(props.favoriteCities.length>0){
+            if(props.cities.length>0){
                 return <div className="Favorite-Page"> 
-                {props.favoriteCities.map((City,Index)=>{
-                    return <Link to="/" onClick={()=>{sendInfo(City)}} key={"linkTo"+Index}><div className="Daily" key={"day"+Index}>
+                {props.cities.map(City =>{
+                    return <Link to="/" onClick={()=>{sendInfo(City)}} key={City.selectedCity.Key}><div className="Daily">
                         <p className="Center Bigger">{City.selectedCity.LocalizedName}</p>
-                        {DateString(City.cityData[0].LocalObservationDateTime)} {/* a continous function that returns different days */}
+                        {DateString(City.cityData[0].LocalObservationDateTime)}
                         <p>{toggleTemperature(City.cityData[0].Temperature.Metric.Value)+toggleTemperatureUnit()}</p>
                     </div></Link>
                 })}
@@ -53,7 +55,7 @@ export default function Favorites(props) {
     }
     return (
         <div>
-            {checkFavorites()} {/* a continous function that returns different results */}
+            {checkFavorites()}
         </div>
     )
 }
